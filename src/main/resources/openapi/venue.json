@@ -1,0 +1,230 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Event Ticketing - Venue API",
+    "description": "API for managing event venues.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api/v1",
+      "description": "Local development"
+    }
+  ],
+  "paths": {
+    "/venues": {
+      "get": {
+        "tags": [
+          "Venues"
+        ],
+        "summary": "List venues",
+        "operationId": "listVenues",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/Page"
+          },
+          {
+            "$ref": "./shared.json#/components/parameters/Size"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "province",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of venues.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/PageVenue"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "./shared.json#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Venues"
+        ],
+        "summary": "Create a venue",
+        "operationId": "createVenue",
+        "description": "Create a new venue. Intended for ADMIN users.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./shared.json#/components/schemas/CreateVenueRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Venue created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/Venue"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./shared.json#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./shared.json#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./shared.json#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/venues/{venueId}": {
+      "get": {
+        "tags": [
+          "Venues"
+        ],
+        "summary": "Get venue details",
+        "operationId": "getVenue",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/VenueId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Venue details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/Venue"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "./shared.json#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "./shared.json#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Venues"
+        ],
+        "summary": "Update a venue",
+        "operationId": "updateVenue",
+        "description": "Update venue information. Intended for ADMIN users.",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/VenueId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./shared.json#/components/schemas/UpdateVenueRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Venue updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/Venue"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./shared.json#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./shared.json#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./shared.json#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./shared.json#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "./shared.json#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Venues"
+        ],
+        "summary": "Delete a venue",
+        "operationId": "deleteVenue",
+        "description": "Delete a venue if it is not referenced by any event. Intended for ADMIN users.",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/VenueId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Venue deleted."
+          },
+          "401": {
+            "$ref": "./shared.json#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./shared.json#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./shared.json#/components/responses/NotFound"
+          },
+          "409": {
+            "description": "Venue is referenced by an event.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

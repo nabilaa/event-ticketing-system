@@ -1,0 +1,334 @@
+﻿{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Event Ticketing - Event API",
+    "description": "API for managing events.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api/v1",
+      "description": "Local development"
+    }
+  ],
+  "paths": {
+    "/events": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "security": [],
+        "summary": "List published events",
+        "operationId": "listEvents",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/Page"
+          },
+          {
+            "$ref": "./shared.json#/components/parameters/Size"
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Return events starting from this timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Return events starting before this timestamp.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/PageEventSummary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Organizer"
+        ],
+        "summary": "Create an event",
+        "operationId": "createEvent",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./shared.json#/components/schemas/CreateEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Event created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./shared.json#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "./shared.json#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "./shared.json#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/events/{eventId}": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "security": [],
+        "summary": "Get event details",
+        "operationId": "getEvent",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/EventId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "./shared.json#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Organizer"
+        ],
+        "summary": "Update an event",
+        "operationId": "updateEvent",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/EventId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./shared.json#/components/schemas/UpdateEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Event updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./shared.json#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "./shared.json#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./shared.json#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Organizer"
+        ],
+        "summary": "Cancel an event",
+        "operationId": "cancelEvent",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/EventId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Event cancelled"
+          },
+          "403": {
+            "$ref": "./shared.json#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./shared.json#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/events/{eventId}/ticket-types": {
+      "get": {
+        "tags": [
+          "Tickets"
+        ],
+        "security": [],
+        "summary": "List ticket types for an event",
+        "operationId": "listTicketTypes",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/EventId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ticket types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "./shared.json#/components/schemas/TicketType"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Organizer"
+        ],
+        "summary": "Create a ticket type",
+        "operationId": "createTicketType",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/EventId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./shared.json#/components/schemas/CreateTicketTypeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ticket type created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/TicketType"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "./shared.json#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "./shared.json#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "./shared.json#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/events/{eventId}/images": {
+      "post": {
+        "tags": [
+          "Organizer"
+        ],
+        "summary": "Add an event image",
+        "operationId": "addEventImage",
+        "parameters": [
+          {
+            "$ref": "./shared.json#/components/parameters/EventId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./shared.json#/components/schemas/EventImageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Image added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/EventImage"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
