@@ -4,8 +4,10 @@ USE event_ticketing_system;
 
 CREATE TABLE users (
     username VARCHAR(100) NOT NULL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
 
     role VARCHAR(20) NOT NULL DEFAULT 'CUSTOMER',
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
