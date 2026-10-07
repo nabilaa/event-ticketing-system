@@ -1,4 +1,4 @@
-﻿{
+{
   "openapi": "3.0.3",
   "info": {
     "title": "Event Ticketing - Event API",
@@ -31,8 +31,8 @@
             "name": "categoryId",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -121,6 +121,77 @@
           },
           "403": {
             "$ref": "./shared.json#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/events/search": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "security": [],
+        "summary": "Search events by date, venue, city, and category",
+        "description": "Returns published and sold-out events. Results are sorted by nearest start date ascending. When date is omitted, only upcoming events are returned.",
+        "operationId": "searchEvents",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Return events starting on this date (YYYY-MM-DD).",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "venueId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "$ref": "./shared.json#/components/parameters/Page"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated event search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./shared.json#/components/schemas/PageEventSummary"
+                }
+              }
+            }
           }
         }
       }

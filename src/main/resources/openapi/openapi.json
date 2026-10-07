@@ -135,8 +135,8 @@
             "name": "categoryId",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -225,6 +225,77 @@
           },
           "403": {
             "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/events/search": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "security": [],
+        "summary": "Search events by date, venue, city, and category",
+        "description": "Returns published and sold-out events. Results are sorted by nearest start date ascending. When date is omitted, only upcoming events are returned.",
+        "operationId": "searchEvents",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Return events starting on this date (YYYY-MM-DD).",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "venueId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated event search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageEventSummary"
+                }
+              }
+            }
           }
         }
       }
@@ -893,8 +964,8 @@
         "in": "path",
         "required": true,
         "schema": {
-          "type": "string",
-          "format": "uuid"
+          "type": "integer",
+          "format": "int64"
         }
       },
       "OrderId": {
@@ -902,8 +973,8 @@
         "in": "path",
         "required": true,
         "schema": {
-          "type": "string",
-          "format": "uuid"
+          "type": "integer",
+          "format": "int64"
         }
       },
       "Page": {
@@ -1056,8 +1127,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "type": "string"
@@ -1095,12 +1166,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "organizerId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "category": {
             "$ref": "#/components/schemas/EventCategory"
@@ -1154,8 +1225,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "type": "string"
@@ -1199,8 +1270,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "type": "string"
@@ -1214,8 +1285,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "type": "string"
@@ -1246,8 +1317,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "imageUrl": {
             "type": "string",
@@ -1304,12 +1375,12 @@
         ],
         "properties": {
           "categoryId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "venueId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "type": "string",
@@ -1379,12 +1450,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "eventId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "type": "string"
@@ -1438,8 +1509,8 @@
         ],
         "properties": {
           "ticketTypeId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "quantity": {
             "type": "integer",
@@ -1452,8 +1523,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "orderNumber": {
             "type": "string",
@@ -1493,12 +1564,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "ticketTypeId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "ticketTypeName": {
             "type": "string"
@@ -1542,12 +1613,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "orderId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "paymentReference": {
             "type": "string"
@@ -1600,15 +1671,15 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "ticketCode": {
             "type": "string"
           },
           "eventId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "eventName": {
             "type": "string"
