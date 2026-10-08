@@ -3,9 +3,9 @@ CREATE DATABASE IF NOT EXISTS event_ticketing_system;
 USE event_ticketing_system;
 
 CREATE TABLE users (
-    username VARCHAR(100) NOT NULL PRIMARY KEY,
-    email VARCHAR(100) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL PRIMARY KEY,
+    password_hash VARCHAR(255),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
 
@@ -15,12 +15,12 @@ CREATE TABLE users (
     created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
 
-    CONSTRAINT uk_users_username UNIQUE (username)
+    UNIQUE (username)
 );
 
 
 CREATE TABLE event_categories (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
 
     name VARCHAR(100) NOT NULL,
 
@@ -30,7 +30,7 @@ CREATE TABLE event_categories (
 
 
 CREATE TABLE venues (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
 
     name VARCHAR(200) NOT NULL,
 
@@ -48,7 +48,7 @@ CREATE TABLE venues (
 
 
 CREATE TABLE events (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
 
     name VARCHAR(255) NOT NULL,
     description TEXT,
